@@ -1,24 +1,26 @@
+"use client";
+
 interface CellProps {
   mineCount: number;
   displayState: "hidden" | "flagged" | "visible";
   revealCallback: () => void;
+  debug: string; // TODO: remove
 }
 
 export default function Cell({
   mineCount,
   displayState,
   revealCallback,
+  debug,
 }: CellProps) {
   const isMine = mineCount === -1;
 
   return (
-    <div>
+    <div onClick={revealCallback}>
+      {displayState === "hidden" && debug}
       {displayState === "flagged" && <Flag />}
-      {displayState === "visible" && isMine ? (
-        <Mine />
-      ) : (
-        <MineCount count={mineCount} />
-      )}
+      {displayState === "visible" &&
+        (isMine ? <Mine /> : <MineCount count={mineCount} />)}
     </div>
   );
 }

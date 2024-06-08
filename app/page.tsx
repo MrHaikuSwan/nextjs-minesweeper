@@ -1,10 +1,13 @@
-import Image from "next/image";
-import Game from "@/components/game";
+import Board from "@/components/board";
 
 export default function Home() {
+  const rows = 8;
+  const cols = 8;
+  const mines = 1;
+
   return (
     <main>
-      <Game />
+      <Board rows={rows} cols={cols} mines={mines} />
     </main>
   );
 }

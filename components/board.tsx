@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import Cell from "./cell";
 
 export default function Board({
@@ -10,19 +12,23 @@ export default function Board({
   cols: number;
   mines: number;
 }) {
-  const [boardCounts, setBoardCounts] = useState(
-    initBoardCounts(rows, cols, mines)
-  );
+  const [boardCounts, setBoardCounts] = useState<number[][]>([[]]);
+
+  useEffect(() => {
+    setBoardCounts(initBoardCounts(rows, cols, mines));
+  }, []);
+
   const [boardStates, setBoardStates] = useState(
-    Array(rows).fill(Array(cols).fill("hidden"))
+    Array.from({ length: rows }, (e) => Array(cols).fill("hidden"))
   );
 
-  const cells = Array(rows).fill(Array(cols).fill(undefined));
-
-  for (let r = 0; r < rows; ++r) {
-    for (let c = 0; c < cols; ++c) {
+  const cells = Array.from({ length: rows }, (e) => Array(cols).fill(null));
+  for (let r = 0; r < boardCounts.length; ++r) {
+    for (let c = 0; c < boardCounts[r].length; ++c) {
       cells[r][c] = (
         <Cell
+          key={c}
+          debug={`${r} ${c}`} // TODO: remove
           mineCount={boardCounts[r][c]}
           displayState={boardStates[r][c]}
           revealCallback={() => revealCell(r, c, setBoardStates)}
@@ -33,20 +39,22 @@ export default function Board({
 
   return (
     <div>
-      {cells.map((row) => (
-        <div>{row}</div>
+      {cells.map((row, index) => (
+        <div key={index}>{row}</div>
       ))}
     </div>
   );
 }
 
 function initBoardCounts(rows: number, cols: number, mines: number) {
-  const boardCounts = Array(rows).fill(Array(cols).fill(0));
+  const boardCounts = Array.from({ length: rows }, (e) => Array(cols).fill(0));
   let minesPlaced = 0;
   while (minesPlaced < mines) {
     const r = Math.floor(rows * Math.random());
     const c = Math.floor(cols * Math.random());
+    console.log(r, c, boardCounts[r][c]);
     if (boardCounts[r][c] !== -1) {
+      minesPlaced++;
       boardCounts[r][c] = -1;
       for (let tr = r - 1; tr <= r + 1; ++tr) {
         for (let tc = c - 1; tc <= c + 1; ++tc) {
@@ -61,9 +69,11 @@ function initBoardCounts(rows: number, cols: number, mines: number) {
           }
         }
       }
-      minesPlaced++;
     }
   }
+
+  console.log(boardCounts);
+
   return boardCounts;
 }
 
