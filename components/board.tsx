@@ -27,8 +27,7 @@ export default function Board({
     for (let c = 0; c < boardCounts[r].length; ++c) {
       cells[r][c] = (
         <Cell
-          key={c}
-          debug={`${r} ${c}`} // TODO: remove
+          key={`${r}${c}`}
           mineCount={boardCounts[r][c]}
           displayState={boardStates[r][c]}
           revealCallback={() => revealCell(r, c, setBoardStates)}
@@ -38,9 +37,11 @@ export default function Board({
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-1 justify-between">
       {cells.map((row, index) => (
-        <div key={index}>{row}</div>
+        <div className="flex flex-row gap-1 justify-between" key={index}>
+          {row}
+        </div>
       ))}
     </div>
   );
@@ -71,8 +72,6 @@ function initBoardCounts(rows: number, cols: number, mines: number) {
       }
     }
   }
-
-  console.log(boardCounts);
 
   return boardCounts;
 }

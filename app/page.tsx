@@ -6,7 +6,7 @@ export default function Home() {
   const mines = 1;
 
   return (
-    <main>
+    <main className="flex flex-row min-h-screen justify-center items-center">
       <Board rows={rows} cols={cols} mines={mines} />
     </main>
   );

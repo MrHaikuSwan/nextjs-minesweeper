@@ -4,7 +4,6 @@ interface CellProps {
   mineCount: number;
   displayState: "hidden" | "flagged" | "visible";
   revealCallback: () => void;
-  debug: string; // TODO: remove
 }
 
 export default function Cell({
@@ -16,8 +15,10 @@ export default function Cell({
   const isMine = mineCount === -1;
 
   return (
-    <div onClick={revealCallback}>
-      {displayState === "hidden" && debug}
+    <div
+      onClick={revealCallback}
+      className="bg-stone-300 w-20 h-20 flex justify-center items-center rounded-lg border-2"
+    >
       {displayState === "flagged" && <Flag />}
       {displayState === "visible" &&
         (isMine ? <Mine /> : <MineCount count={mineCount} />)}
