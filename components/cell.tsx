@@ -1,8 +1,10 @@
 "use client";
 
+export type DisplayState = "hidden" | "flagged" | "visible";
+
 interface CellProps {
   mineCount: number;
-  displayState: "hidden" | "flagged" | "visible";
+  displayState: DisplayState;
   revealCallback: (arg0: string) => void;
 }
 

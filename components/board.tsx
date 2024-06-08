@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Cell from "./cell";
+import Cell, { DisplayState } from "./cell";
 
 export default function Board({
   rows,
@@ -18,7 +18,7 @@ export default function Board({
     setBoardCounts(initBoardCounts(rows, cols, mines));
   }, []);
 
-  const [boardStates, setBoardStates] = useState(
+  const [boardStates, setBoardStates] = useState<DisplayState[][]>(
     Array.from({ length: rows }, (e) => Array(cols).fill("hidden"))
   );
 
@@ -32,7 +32,7 @@ export default function Board({
           displayState={boardStates[r][c]}
           revealCallback={(cellState) => {
             if (cellState === "hidden") {
-              revealCell(r, c, setBoardStates);
+              revealCells(r, c, boardCounts, setBoardStates);
             }
           }}
         />
@@ -57,7 +57,6 @@ function initBoardCounts(rows: number, cols: number, mines: number) {
   while (minesPlaced < mines) {
     const r = Math.floor(rows * Math.random());
     const c = Math.floor(cols * Math.random());
-    console.log(r, c, boardCounts[r][c]);
     if (boardCounts[r][c] !== -1) {
       minesPlaced++;
       boardCounts[r][c] = -1;
@@ -80,8 +79,43 @@ function initBoardCounts(rows: number, cols: number, mines: number) {
   return boardCounts;
 }
 
-function revealCell(row: number, col: number, setBoardStates: Function) {
-  setBoardStates((boardStates: number[][]) =>
+function revealCells(
+  row: number,
+  col: number,
+  boardCounts: number[][],
+  setBoardStates: Function
+) {
+  setBoardStates((boardStates: DisplayState[][]) => {
+    let nextBoardStates = [...boardStates];
+    let stack = [[row, col]];
+    const rows = boardStates.length;
+    const cols = boardStates[0].length;
+    while (stack.length > 0) {
+      let [r, c] = stack.pop()!;
+      nextBoardStates[r][c] = "visible";
+      if (boardCounts[r][c] !== 0) {
+        continue;
+      }
+      for (let tr = r - 1; tr <= r + 1; ++tr) {
+        for (let tc = c - 1; tc <= c + 1; ++tc) {
+          if (tr < 0 || tr >= rows || tc < 0 || tc >= cols) {
+            continue;
+          }
+          if (tr === r && tc === c) {
+            continue;
+          }
+          if (nextBoardStates[tr][tc] === "hidden") {
+            stack.push([tr, tc]);
+          }
+        }
+      }
+    }
+    return nextBoardStates;
+  });
+}
+
+function revealSingleCell(row: number, col: number, setBoardStates: Function) {
+  setBoardStates((boardStates: DisplayState[][]) =>
     boardStates.map((rowStates, r) =>
       rowStates.map((cellState, c) =>
         row === r && col === c ? "visible" : cellState
