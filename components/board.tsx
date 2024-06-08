@@ -25,14 +25,23 @@ export default function Board({
   const cells = Array.from({ length: rows }, (e) => Array(cols).fill(null));
   for (let r = 0; r < boardCounts.length; ++r) {
     for (let c = 0; c < boardCounts[r].length; ++c) {
+      const mineCount = boardCounts[r][c];
+      const displayState = boardStates[r][c];
       cells[r][c] = (
         <Cell
           key={`${r}${c}`}
-          mineCount={boardCounts[r][c]}
-          displayState={boardStates[r][c]}
-          revealCallback={(cellState) => {
+          mineCount={mineCount}
+          displayState={displayState}
+          revealCallback={(cellState: DisplayState) => {
             if (cellState === "hidden") {
               revealCells(r, c, boardCounts, setBoardStates);
+            }
+          }}
+          toggleFlagCallback={() => {
+            if (displayState === "hidden") {
+              setSingleCellState(r, c, "flagged", setBoardStates);
+            } else if (displayState === "flagged") {
+              setSingleCellState(r, c, "hidden", setBoardStates);
             }
           }}
         />
@@ -114,11 +123,16 @@ function revealCells(
   });
 }
 
-function revealSingleCell(row: number, col: number, setBoardStates: Function) {
+function setSingleCellState(
+  row: number,
+  col: number,
+  newDisplayState: DisplayState,
+  setBoardStates: Function
+) {
   setBoardStates((boardStates: DisplayState[][]) =>
     boardStates.map((rowStates, r) =>
       rowStates.map((cellState, c) =>
-        row === r && col === c ? "visible" : cellState
+        row === r && col === c ? newDisplayState : cellState
       )
     )
   );
