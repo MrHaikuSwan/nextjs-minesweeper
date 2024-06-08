@@ -7,6 +7,7 @@ interface CellProps {
   displayState: DisplayState;
   revealCallback: (arg0: DisplayState) => void;
   toggleFlagCallback: () => void;
+  className: string;
 }
 
 export default function Cell({
@@ -14,6 +15,7 @@ export default function Cell({
   displayState,
   revealCallback,
   toggleFlagCallback,
+  className,
 }: CellProps) {
   const isMine = mineCount === -1;
 
@@ -24,11 +26,13 @@ export default function Cell({
         e.preventDefault();
         toggleFlagCallback();
       }}
-      className="bg-stone-300 w-20 h-20 flex justify-center items-center rounded-lg border-2"
+      className={className}
     >
-      {displayState === "flagged" && <Flag />}
-      {displayState === "visible" &&
-        (isMine ? <Mine /> : <MineCount count={mineCount} />)}
+      <div className="absolute">
+        {displayState === "flagged" && <Flag />}
+        {displayState === "visible" &&
+          (isMine ? <Mine /> : <MineCount count={mineCount} />)}
+      </div>
     </div>
   );
 }

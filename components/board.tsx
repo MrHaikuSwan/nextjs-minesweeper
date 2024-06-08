@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Cell, { DisplayState } from "./cell";
+import { closeSync } from "fs";
 
 export default function Board({
   rows,
@@ -42,9 +43,9 @@ export default function Board({
       }
     }
     if (playerLost) {
-      alert("YOU LOSE");
+      alert("You Lose.");
     } else if (playerWon) {
-      alert("YOU WIN");
+      alert("You Win!");
     }
   }, [boardStates]);
 
@@ -55,6 +56,8 @@ export default function Board({
       const displayState = boardStates[r][c];
       cells[r][c] = (
         <Cell
+          // className={`fixed bg-stone-300 w-[12.5%] aspect-square flex justify-center items-center rounded-lg border-2`}
+          className="h-full grow bg-stone-300 flex justify-center items-center rounded-sm md:rounded-md border-2"
           key={`${r}${c}`}
           mineCount={mineCount}
           displayState={displayState}
@@ -75,15 +78,46 @@ export default function Board({
     }
   }
 
+  // return cells;
+
   return (
-    <div className="flex flex-col gap-1 justify-between">
+    <div className="w-full h-full flex flex-col flex-1 gap-1">
       {cells.map((row, index) => (
-        <div className="flex flex-row gap-1 justify-between" key={index}>
+        <div key={index} className="w-full grow flex flex-row flex-1 gap-1">
           {row}
         </div>
       ))}
     </div>
+
+    // <div className="w-full h-full bg-lime-700 flex flex-col flex-1">
+    //   <div className="w-full border grow flex flex-row flex-1">
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //     <div className="h-full border grow"></div>
+    //   </div>
+    //   <div className="w-full border grow"></div>
+    //   <div className="w-full border grow"></div>
+    //   <div className="w-full border grow"></div>
+    //   <div className="w-full border grow"></div>
+    //   <div className="w-full border grow"></div>
+    //   <div className="w-full border grow"></div>
+    //   <div className="w-full border grow"></div>
+    // </div>
   );
+
+  // <div className="flex flex-col gap-1 justify-between">
+  //   {cells.map((row, index) => (
+  //     <div className="flex flex-row gap-1 justify-between" key={index}>
+  //       {row}
+  //     </div>
+  //   ))}
+  // </div>
+  // );
 }
 
 function initBoardCounts(rows: number, cols: number, mines: number) {
