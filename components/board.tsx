@@ -14,13 +14,39 @@ export default function Board({
 }) {
   const [boardCounts, setBoardCounts] = useState<number[][]>([[]]);
 
+  const [boardStates, setBoardStates] = useState<DisplayState[][]>(
+    Array.from({ length: rows }, (e) => Array(cols).fill("hidden"))
+  );
+
   useEffect(() => {
     setBoardCounts(initBoardCounts(rows, cols, mines));
   }, []);
 
-  const [boardStates, setBoardStates] = useState<DisplayState[][]>(
-    Array.from({ length: rows }, (e) => Array(cols).fill("hidden"))
-  );
+  // Win condition: all non-mines are visible (not [any non-mines are non-visible])
+  // Lose condition: any mines are visible
+  useEffect(() => {
+    if (boardCounts.length != rows) {
+      return;
+    }
+    let playerWon = true;
+    let playerLost = false;
+    for (let r = 0; r < rows; ++r) {
+      for (let c = 0; c < cols; ++c) {
+        const count = boardCounts[r][c];
+        const state = boardStates[r][c];
+        if (count === -1 && state === "visible") {
+          playerLost = true;
+        } else if (count !== -1 && state !== "visible") {
+          playerWon = false;
+        }
+      }
+    }
+    if (playerLost) {
+      alert("YOU LOSE");
+    } else if (playerWon) {
+      alert("YOU WIN");
+    }
+  }, [boardStates]);
 
   const cells = Array.from({ length: rows }, (e) => Array(cols).fill(null));
   for (let r = 0; r < boardCounts.length; ++r) {
