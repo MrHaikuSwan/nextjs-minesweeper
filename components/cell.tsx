@@ -3,20 +3,19 @@
 interface CellProps {
   mineCount: number;
   displayState: "hidden" | "flagged" | "visible";
-  revealCallback: () => void;
+  revealCallback: (arg0: string) => void;
 }
 
 export default function Cell({
   mineCount,
   displayState,
   revealCallback,
-  debug,
 }: CellProps) {
   const isMine = mineCount === -1;
 
   return (
     <div
-      onClick={revealCallback}
+      onClick={() => revealCallback(displayState)}
       className="bg-stone-300 w-20 h-20 flex justify-center items-center rounded-lg border-2"
     >
       {displayState === "flagged" && <Flag />}

@@ -30,7 +30,11 @@ export default function Board({
           key={`${r}${c}`}
           mineCount={boardCounts[r][c]}
           displayState={boardStates[r][c]}
-          revealCallback={() => revealCell(r, c, setBoardStates)}
+          revealCallback={(cellState) => {
+            if (cellState === "hidden") {
+              revealCell(r, c, setBoardStates);
+            }
+          }}
         />
       );
     }
@@ -76,4 +80,12 @@ function initBoardCounts(rows: number, cols: number, mines: number) {
   return boardCounts;
 }
 
-function revealCell(row: number, col: number, setBoardStates: Function) {}
+function revealCell(row: number, col: number, setBoardStates: Function) {
+  setBoardStates((boardStates: number[][]) =>
+    boardStates.map((rowStates, r) =>
+      rowStates.map((cellState, c) =>
+        row === r && col === c ? "visible" : cellState
+      )
+    )
+  );
+}
