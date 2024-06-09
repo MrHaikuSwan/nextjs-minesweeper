@@ -17,7 +17,7 @@ export default function Home() {
     //   </div>
     // </main>
     <div className="w-screen h-screen flex justify-center items-center">
-      <div className="w-1/2 aspect-square">
+      <div className="w-4/5 md:w-1/2 aspect-square">
         <Board rows={rows} cols={cols} mines={mines} />
       </div>
     </div>
