@@ -1,32 +1,36 @@
 "use client";
 
 export type DisplayState = "hidden" | "flagged" | "visible";
-
-interface CellProps {
+export type CellState = {
   mineCount: number;
+  isMine: boolean;
   displayState: DisplayState;
-  revealCallback: (arg0: DisplayState) => void;
-  toggleFlagCallback: () => void;
-  className: string;
-}
+};
 
 export default function Cell({
-  mineCount,
-  displayState,
+  cellState,
   revealCallback,
   toggleFlagCallback,
-  className,
-}: CellProps) {
-  const isMine = mineCount === -1;
+  firstClickCallback,
+}: {
+  cellState: CellState;
+  revealCallback: (arg0: DisplayState) => void;
+  toggleFlagCallback: () => void;
+  firstClickCallback: () => void;
+}) {
+  const { mineCount, isMine, displayState } = cellState;
 
   return (
     <div
-      onClick={() => revealCallback(displayState)}
+      onClick={() => {
+        firstClickCallback();
+        revealCallback(displayState);
+      }}
       onContextMenu={(e) => {
         e.preventDefault();
         toggleFlagCallback();
       }}
-      className={className}
+      className="h-full grow bg-stone-300 text-black flex justify-center items-center rounded-sm md:rounded-md border-2"
     >
       <div className="absolute">
         {displayState === "flagged" && <Flag />}
