@@ -106,7 +106,7 @@ export default function Board({
   }
 
   return (
-    <div className="w-full h-full flex flex-col flex-1 gap-1">
+    <div className="w-full h-full flex flex-col flex-1 gap-1 items-center">
       <div className="w-[95%] h-[95%] flex flex-col flex-1 gap-1">
         {cells.map((row, index) => (
           <div key={index} className="w-full grow flex flex-row flex-1 gap-1">
@@ -114,10 +114,10 @@ export default function Board({
           </div>
         ))}
       </div>
-      <p className="flex justify-around text-2xl">
+      <div className="w-full flex justify-around text-2xl">
         <span className="text-green-100">Wins: {wins}</span>
         <span className="text-red-100">Losses: {losses}</span>
-      </p>
+      </div>
     </div>
   );
 }
