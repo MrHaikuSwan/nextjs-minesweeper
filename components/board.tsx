@@ -7,10 +7,14 @@ export default function Board({
   rows,
   cols,
   mines,
+  winCallback,
+  loseCallback,
 }: {
   rows: number;
   cols: number;
   mines: number;
+  winCallback: () => void;
+  loseCallback: () => void;
 }) {
   const [boardStates, setBoardStates] = useState<CellState[][]>(
     Array.from({ length: rows }, (e) =>
@@ -39,9 +43,9 @@ export default function Board({
       }
     }
     if (playerLost) {
-      alert("You Lose.");
+      loseCallback();
     } else if (playerWon) {
-      alert("You Win!");
+      winCallback();
     }
   }, [boardStates]);
 
