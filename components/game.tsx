@@ -53,7 +53,7 @@ function EndGameModal({
 }) {
   return (
     <div className="z-10 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-stone-300 rounded-lg p-8 text-center">
+      <div className="bg-stone-300 bg-opacity-90 rounded-lg p-8 text-center">
         <h1
           className={`text-4xl mb-6 ${
             gameState === "won" ? "text-green-700" : "text-red-700"

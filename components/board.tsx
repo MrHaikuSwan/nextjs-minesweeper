@@ -42,6 +42,9 @@ export default function Board({
         }
       }
     }
+    if (playerWon || playerLost) {
+      setAllCellDisplayState("visible", setBoardStates);
+    }
     if (playerLost) {
       loseCallback();
     } else if (playerWon) {
@@ -236,6 +239,20 @@ function setSingleCellDisplayState(
           ? { ...cellState, displayState: newDisplayState }
           : cellState
       )
+    )
+  );
+}
+
+function setAllCellDisplayState(
+  newDisplayState: DisplayState,
+  setBoardStates: Dispatch<SetStateAction<CellState[][]>>
+) {
+  setBoardStates((boardStates: CellState[][]) =>
+    boardStates.map((rowStates, r) =>
+      rowStates.map((cellState, c) => ({
+        ...cellState,
+        displayState: newDisplayState,
+      }))
     )
   );
 }
