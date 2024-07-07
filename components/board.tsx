@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Cell, { CellState, DisplayState } from "./cell";
+import { GameState } from "./game";
 
 export default function Board({
   rows,
@@ -9,12 +10,18 @@ export default function Board({
   mines,
   winCallback,
   loseCallback,
+  wins,
+  losses,
+  gameState,
 }: {
   rows: number;
   cols: number;
   mines: number;
   winCallback: () => void;
   loseCallback: () => void;
+  wins: number;
+  losses: number;
+  gameState: GameState;
 }) {
   const [boardStates, setBoardStates] = useState<CellState[][]>(
     Array.from({ length: rows }, (e) =>
@@ -26,6 +33,9 @@ export default function Board({
   // Win condition: all non-mines are visible (not [any non-mines are non-visible])
   // Lose condition: any mines are visible
   useEffect(() => {
+    if (gameState !== "playing") {
+      return;
+    }
     if (boardStates.length != rows) {
       return;
     }
@@ -102,6 +112,10 @@ export default function Board({
           {row}
         </div>
       ))}
+      <p className="flex justify-around text-2xl">
+        <span className="text-green-100">Wins: {wins}</span>
+        <span className="text-red-100">Losses: {losses}</span>
+      </p>
     </div>
   );
 }

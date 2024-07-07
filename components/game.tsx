@@ -3,11 +3,13 @@
 import { useState } from "react";
 import Board from "./board";
 
-type GameState = "playing" | "won" | "lost";
+export type GameState = "playing" | "won" | "lost";
 
 export default function Game() {
   const [gameState, setGameState] = useState<GameState>("playing");
   const [resetBoardFlag, setResetBoardFlag] = useState(false);
+  const [wins, setWins] = useState(0);
+  const [losses, setLosses] = useState(0);
 
   const rows = 8;
   const cols = 8;
@@ -32,11 +34,16 @@ export default function Game() {
             cols={cols}
             mines={mines}
             winCallback={() => {
+              setWins((wins) => wins + 1);
               setGameState("won");
             }}
             loseCallback={() => {
+              setLosses((losses) => losses + 1);
               setGameState("lost");
             }}
+            wins={wins}
+            losses={losses}
+            gameState={gameState}
           />
         </div>
       </div>
